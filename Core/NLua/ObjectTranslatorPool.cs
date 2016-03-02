@@ -37,13 +37,18 @@ namespace NLua
 
 	internal class ObjectTranslatorPool
 	{
-		private static volatile ObjectTranslatorPool instance = new ObjectTranslatorPool ();		
+        [ThreadStatic]
+        private static ObjectTranslatorPool instance = null;
 		private Dictionary<LuaState, ObjectTranslator> translators = new Dictionary<LuaState, ObjectTranslator>();
 		
 		public static ObjectTranslatorPool Instance
 		{
 			get
 			{
+                if (instance == null)
+                {
+                    instance = new ObjectTranslatorPool();
+                }
 				return instance;
 			}
 		}
@@ -59,14 +64,15 @@ namespace NLua
 		
 		public ObjectTranslator Find (LuaState luaState)
 		{
-			if (translators.ContainsKey (luaState))
-				return translators [luaState];
+            ObjectTranslator translator;
+            if (translators.TryGetValue (luaState, out translator))
+                return translator;
 
 			LuaState main = LuaCore.LuaNetGetMainState (luaState);
 
-			if (translators.ContainsKey (main))
-				return translators [main];
-			
+            if (translators.TryGetValue (main, out translator))
+                return translator;
+
 			return null;
 		}
 		

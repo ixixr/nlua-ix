@@ -96,6 +96,7 @@ namespace NLua
 		/// True while a script is being executed
 		/// </summary>
 		public bool IsExecuting { get { return executing; } }
+        public LuaState LuaState { get { return luaState; } }
 
 		private LuaNativeFunction panicCallback;
 		private ObjectTranslator translator;
