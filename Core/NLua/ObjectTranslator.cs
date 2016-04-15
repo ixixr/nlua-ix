@@ -90,7 +90,7 @@ namespace NLua
 			this.interpreter = interpreter;
 			typeChecker = new CheckType (this);
 			metaFunctions = new MetaFunctions (this);
-			assemblies = new List<Assembly> ();
+			assemblies = new List<Assembly> (AppDomain.CurrentDomain.GetAssemblies());
 
 			importTypeFunction = new LuaNativeFunction (ObjectTranslator.ImportType);
 			loadAssemblyFunction = new LuaNativeFunction (ObjectTranslator.LoadAssembly);
